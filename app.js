@@ -62,8 +62,8 @@ mongoose.connect(process.env.MONGODB_URI)
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({ 
         mongoUrl: process.env.MONGODB_URI,
         collectionName: 'sessions',
@@ -126,11 +126,24 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (data, done) => {
     try {
-        const user = data.type === 'student' 
-            ? await Student.findById(data.id)
-            : await Alumni.findById(data.id);
+        console.log('Deserializing user:', data);
+        let user;
+        
+        if (data.type === 'student') {
+            user = await Student.findById(data.id);
+        } else if (data.type === 'alumni') {
+            user = await Alumni.findById(data.id);
+        }
+        
+        if (!user) {
+            console.log('User not found during deserialization');
+            return done(null, false);
+        }
+        
+        console.log('User deserialized successfully:', user._id);
         done(null, user);
     } catch (err) {
+        console.error('Error deserializing user:', err);
         done(err);
     }
 });
@@ -142,9 +155,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Authentication middleware
 const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    console.log('isAuthenticated middleware called');
+    console.log('Session:', req.session);
+    console.log('User authenticated:', req.isAuthenticated());
+    
+    if (req.isAuthenticated() && req.session.user) {
+        console.log('User is authenticated, proceeding');
         return next();
     }
+    
+    console.log('User is not authenticated, redirecting to login');
     req.flash('error_msg', 'Please login to view this page');
     res.redirect('/login');
 };
@@ -326,8 +346,10 @@ app.post('/login', (req, res, next) => {
         return res.redirect('/login');
     }
 
-    // Create a custom authenticate callback
-    const authenticateUser = async (err, user, info) => {
+    // Use the appropriate strategy based on user type
+    const strategy = req.body.userType === 'student' ? 'student' : 'alumni';
+    
+    passport.authenticate(strategy, (err, user, info) => {
         if (err) {
             console.error('Authentication error:', err);
             return next(err);
@@ -337,34 +359,64 @@ app.post('/login', (req, res, next) => {
             req.flash('error_msg', info.message || 'Invalid email or password');
             return res.redirect('/login');
         }
-        req.logIn(user, (err) => {
+        
+        req.login(user, (err) => {
             if (err) {
                 console.error('Login error:', err);
                 return next(err);
             }
             console.log('User logged in successfully:', user._id);
             req.flash('success_msg', 'You are now logged in');
-            return res.redirect('/dashboard');
+            
+            // Set session data
+            req.session.user = {
+                id: user._id,
+                type: req.body.userType
+            };
+            
+            return res.redirect('/profile');
         });
-    };
-
-    // Use the appropriate strategy based on user type
-    if (req.body.userType === 'student') {
-        passport.authenticate('student', authenticateUser)(req, res, next);
-    } else if (req.body.userType === 'alumni') {
-        passport.authenticate('alumni', authenticateUser)(req, res, next);
-    } else {
-        req.flash('error_msg', 'Invalid user type selected');
-        return res.redirect('/login');
-    }
+    })(req, res, next);
 });
 
 app.get('/dashboard', async (req, res) => {
-    if (!req.user) {
+    console.log('Dashboard route accessed');
+    console.log('Session:', req.session);
+    console.log('User in request:', req.user ? req.user._id : 'No user');
+    console.log('Is authenticated:', req.isAuthenticated());
+    
+    if (!req.isAuthenticated()) {
+        console.log('User not authenticated, redirecting to login');
         req.flash('error_msg', 'Please login to view dashboard');
         return res.redirect('/login');
     }
-    res.redirect('/profile');
+    
+    try {
+        // Get user data based on type
+        let userData;
+        if (req.session.user.type === 'student') {
+            userData = await Student.findById(req.user._id);
+        } else {
+            userData = await Alumni.findById(req.user._id);
+        }
+        
+        if (!userData) {
+            console.log('User data not found');
+            req.flash('error_msg', 'User data not found');
+            return res.redirect('/login');
+        }
+        
+        console.log('User authenticated, rendering dashboard');
+        res.render('dashboard', {
+            student: req.session.user.type === 'student' ? userData : null,
+            alumni: req.session.user.type === 'alumni' ? userData : null,
+            currentUser: userData
+        });
+    } catch (err) {
+        console.error('Error fetching user data:', err);
+        req.flash('error_msg', 'Error loading dashboard');
+        res.redirect('/login');
+    }
 });
 
 app.get('/events', async (req, res) => {
