@@ -26,6 +26,9 @@ const app = express();
 // Add method-override middleware
 app.use(methodOverride('_method'));
 
+// Add trust proxy setting near the top
+app.set('trust proxy', 1);
+
 // Cloudinary configuration
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -71,7 +74,7 @@ app.use(session({
     }),
     cookie: { 
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.COOKIE_SECURE === 'true', // Using separate env var
         httpOnly: true,
         sameSite: 'lax'
     }
@@ -159,7 +162,7 @@ const isAuthenticated = (req, res, next) => {
     console.log('Session:', req.session);
     console.log('User authenticated:', req.isAuthenticated());
     
-    if (req.isAuthenticated() && req.session.user) {
+    if (req.isAuthenticated()) {
         console.log('User is authenticated, proceeding');
         return next();
     }
