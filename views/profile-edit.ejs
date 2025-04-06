@@ -1,0 +1,210 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card glass-card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Edit Profile</h3>
+                    <form action="/profile" method="POST" enctype="multipart/form-data">
+                        <!-- Profile Picture Section -->
+                        <div class="row mb-4">
+                            <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
+                                <img src="<%= (student || alumni).profilePicture || '/images/default-avatar.png' %>" 
+                                     alt="Current Profile Picture" 
+                                     class="rounded-circle mb-3 profile-img"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                                <div class="mb-3">
+                                    <label for="profilePicture" class="form-label">Change Profile Picture</label>
+                                    <input type="file" class="form-control glass-input" id="profilePicture" name="profilePicture" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <!-- Common Fields -->
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control glass-input" id="username" name="username" value="<%= (student || alumni).username %>" required>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control glass-input" id="email" name="email" value="<%= (student || alumni).email %>" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label for="bio" class="form-label">Bio</label>
+                                        <textarea class="form-control glass-input" id="bio" name="bio" rows="4"><%= (student || alumni).bio || '' %></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="department" class="form-label">Department</label>
+                                        <select class="form-select glass-input" id="department" name="department" required>
+                                            <option value="">Select Department</option>
+                                            <option value="Computer Science" <%= (student || alumni).department === 'Computer Science' ? 'selected' : '' %>>Computer Science</option>
+                                            <option value="Information Technology" <%= (student || alumni).department === 'Information Technology' ? 'selected' : '' %>>Information Technology</option>
+                                            <option value="Electronics" <%= (student || alumni).department === 'Electronics' ? 'selected' : '' %>>Electronics</option>
+                                            <option value="Mechanical" <%= (student || alumni).department === 'Mechanical' ? 'selected' : '' %>>Mechanical</option>
+                                            <option value="Civil" <%= (student || alumni).department === 'Civil' ? 'selected' : '' %>>Civil</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="skills" class="form-label">Skills (comma separated)</label>
+                                        <input type="text" class="form-control glass-input" id="skills" name="skills" value="<%= (student || alumni).skills ? (student || alumni).skills.join(', ') : '' %>" placeholder="e.g., Java, Python, Web Development">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="interests" class="form-label">Interests (comma separated)</label>
+                                    <input type="text" class="form-control glass-input" id="interests" name="interests" value="<%= (student || alumni).interests ? (student || alumni).interests.join(', ') : '' %>" placeholder="e.g., Coding, Machine Learning, Web Development">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Specific Fields -->
+                        <% if (student) { %>
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="year" class="form-label">Year of Study</label>
+                                    <select class="form-select glass-input" id="year" name="year" required>
+                                        <option value="">Select Year</option>
+                                        <option value="1" <%= student.year === 1 ? 'selected' : '' %>>1st Year</option>
+                                        <option value="2" <%= student.year === 2 ? 'selected' : '' %>>2nd Year</option>
+                                        <option value="3" <%= student.year === 3 ? 'selected' : '' %>>3rd Year</option>
+                                        <option value="4" <%= student.year === 4 ? 'selected' : '' %>>4th Year</option>
+                                        <option value="5" <%= student.year === 5 ? 'selected' : '' %>>5th Year</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="rollNumber" class="form-label">Roll Number</label>
+                                    <input type="text" class="form-control glass-input" id="rollNumber" name="rollNumber" value="<%= student.rollNumber || '' %>" required>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <!-- Alumni Specific Fields -->
+                        <% if (alumni) { %>
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="graduationYear" class="form-label">Graduation Year</label>
+                                    <input type="number" class="form-control glass-input" id="graduationYear" name="graduationYear" min="1950" value="<%= alumni.graduationYear || '' %>">
+                                </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="company" class="form-label">Current Company</label>
+                                    <input type="text" class="form-control glass-input" id="company" name="company" value="<%= alumni.company || '' %>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="currentPosition" class="form-label">Current Position</label>
+                                    <input type="text" class="form-control glass-input" id="currentPosition" name="currentPosition" value="<%= alumni.currentPosition || '' %>">
+                                </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="linkedInUrl" class="form-label">LinkedIn Profile URL</label>
+                                    <input type="url" class="form-control glass-input" id="linkedInUrl" name="linkedInUrl" value="<%= alumni.linkedInUrl || '' %>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="expertise" class="form-label">Areas of Expertise (comma separated)</label>
+                                    <input type="text" class="form-control glass-input" id="expertise" name="expertise" value="<%= alumni.expertise ? alumni.expertise.join(', ') : '' %>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="experience" class="form-label">Professional Experience</label>
+                                    <textarea class="form-control glass-input" id="experience" name="experience" rows="4"><%= alumni.experience || '' %></textarea>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <div class="row mt-4">
+                            <div class="col-12 text-center text-md-end">
+                                <a href="/profile" class="btn btn-secondary me-2 mb-2 mb-md-0">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .glass-input:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #00dbde;
+        box-shadow: 0 0 15px rgba(0, 219, 222, 0.3);
+    }
+
+    .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-select.glass-input {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2300dbde' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+    }
+
+    .form-select.glass-input option {
+        background-color: #1a1a2e;
+        color: white;
+    }
+
+    .form-select.glass-input option:checked {
+        background: linear-gradient(45deg, #00dbde, #fc00ff);
+    }
+
+    .form-select.glass-input option:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #00dbde, #fc00ff);
+        border: none;
+        color: white;
+        padding: 0.5rem 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 219, 222, 0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.5rem 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .profile-img {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .me-2 {
+            margin-right: 0 !important;
+        }
+    }
+</style> 

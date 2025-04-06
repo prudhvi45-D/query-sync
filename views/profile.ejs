@@ -1,0 +1,324 @@
+
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-4">
+            <div class="card glass-card mb-4">
+                <div class="card-body text-center">
+                    <img src="<%= (student || alumni).profilePicture || '/images/default-avatar.png' %>" 
+                         alt="Profile Picture" 
+                         class="rounded-circle mb-3 profile-img">
+                    <h3 class="mb-2"><%= (student || alumni).username %></h3>
+                    <p class="text-muted mb-3"><%= (student || alumni).email %></p>
+                    <a href="/profile/edit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Skills Card -->
+            <div class="card glass-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Skills</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <% if ((student || alumni).skills && (student || alumni).skills.length > 0) { %>
+                            <% (student || alumni).skills.forEach(skill => { %>
+                                <span class="badge bg-primary"><%= skill %></span>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="text-muted">No skills added yet</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interests Card -->
+            <div class="card glass-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Interests</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <% if ((student || alumni).interests && (student || alumni).interests.length > 0) { %>
+                            <% (student || alumni).interests.forEach(interest => { %>
+                                <span class="badge bg-info"><%= interest %></span>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="text-muted">No interests added yet</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Bio Card -->
+            <div class="card glass-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">About Me</h5>
+                    <p class="card-text"><%= (student || alumni).bio || 'No bio added yet' %></p>
+                </div>
+            </div>
+
+            <!-- Additional Info Card -->
+            <div class="card glass-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Additional Information</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Department:</strong> <%= (student || alumni).department || 'Not specified' %></p>
+                            <% if (student) { %>
+                                <p><strong>Year:</strong> <%= student.year || 'Not specified' %></p>
+                                <p><strong>Roll Number:</strong> <%= student.rollNumber || 'Not specified' %></p>
+                            <% } else if (alumni) { %>
+                                <p><strong>Graduation Year:</strong> <%= alumni.graduationYear || 'Not specified' %></p>
+                                <p><strong>Current Position:</strong> <%= alumni.currentPosition || 'Not specified' %></p>
+                                <p><strong>Company:</strong> <%= alumni.company || 'Not specified' %></p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Card -->
+            <div class="card glass-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Recent Activity</h5>
+                    <% if (student && student.questionsAsked && student.questionsAsked.length > 0) { %>
+                        <div class="list-group">
+                            <% student.questionsAsked.slice(0, 5).forEach(question => { %>
+                                <a href="/queries/<%= question._id %>" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1"><%= question.title || 'Untitled Question' %></h6>
+                                        <small class="text-muted"><%= question.createdAt ? new Date(question.createdAt).toLocaleDateString() : 'Date not available' %></small>
+                                    </div>
+                                    <p class="mb-1"><%= question.description ? question.description.substring(0, 100) + '...' : 'No description available' %></p>
+                                </a>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">No recent activity</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/profile" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<%= (student || alumni).username %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= (student || alumni).email %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="3"><%= (student || alumni).bio || '' %></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profilePicture" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="skills" class="form-label">Skills (comma separated)</label>
+                        <input type="text" class="form-control" id="skills" name="skills" value="<%= (student || alumni).skills ? (student || alumni).skills.join(', ') : '' %>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="interests" class="form-label">Interests (comma separated)</label>
+                        <input type="text" class="form-control" id="interests" name="interests" value="<%= (student || alumni).interests ? (student || alumni).interests.join(', ') : '' %>">
+                    </div>
+                    <% if (student) { %>
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Year</label>
+                            <input type="number" class="form-control" id="year" name="year" value="<%= student.year %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="rollNumber" class="form-label">Roll Number</label>
+                            <input type="text" class="form-control" id="rollNumber" name="rollNumber" value="<%= student.rollNumber %>">
+                        </div>
+                    <% } else if (alumni) { %>
+                        <div class="mb-3">
+                            <label for="graduationYear" class="form-label">Graduation Year</label>
+                            <input type="number" class="form-control" id="graduationYear" name="graduationYear" value="<%= alumni.graduationYear %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="currentPosition" class="form-label">Current Position</label>
+                            <input type="text" class="form-control" id="currentPosition" name="currentPosition" value="<%= alumni.currentPosition %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="company" class="form-label">Company</label>
+                            <input type="text" class="form-control" id="company" name="company" value="<%= alumni.company %>">
+                        </div>
+                    <% } %>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(45deg, #00dbde, #fc00ff);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #1a1a2e;
+        color: var(--text-primary);
+        padding-top: 76px;
+    }
+
+    .glass-card {
+        background: rgba(26, 26, 46, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        color: var(--text-primary);
+    }
+
+    .card-title {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .card-text {
+        color: var(--text-secondary);
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 3px solid var(--glass-border);
+        transition: all 0.3s ease;
+    }
+
+    .profile-img:hover {
+        transform: scale(1.05);
+        border-color: #00dbde;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        border-radius: 20px;
+        color: white;
+    }
+
+    .badge.bg-primary {
+        background: linear-gradient(45deg, #00dbde, #fc00ff) !important;
+    }
+
+    .badge.bg-info {
+        background: linear-gradient(45deg, #00dbde, #00b4d8) !important;
+    }
+
+    .list-group-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        margin-bottom: 0.5rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        color: var(--text-primary);
+    }
+
+    .list-group-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+    }
+
+    .list-group-item h6 {
+        color: var(--text-primary);
+    }
+
+    .list-group-item small {
+        color: var(--text-secondary);
+    }
+
+    .modal-content {
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .modal-title {
+        color: var(--text-primary);
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--glass-border);
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #00dbde;
+        box-shadow: none;
+        color: var(--text-primary);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    p {
+        color: var(--text-secondary);
+    }
+</style>
+
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>

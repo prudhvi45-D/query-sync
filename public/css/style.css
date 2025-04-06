@@ -1,0 +1,297 @@
+/* Base Styles */
+:root {
+    --primary-gradient: linear-gradient(45deg, #00dbde, #fc00ff);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+    --text-color: #ffffff;
+    --card-bg: rgba(26, 26, 46, 0.8);
+    --hover-glow: 0 0 15px rgba(0, 219, 222, 0.3);
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: var(--text-color);
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Responsive Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Responsive Grid System */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+[class*="col-"] {
+    padding: 0 15px;
+    width: 100%;
+}
+
+/* Responsive Columns */
+@media (min-width: 576px) {
+    .col-sm-6 { width: 50%; }
+    .col-sm-12 { width: 100%; }
+}
+
+@media (min-width: 768px) {
+    .col-md-3 { width: 25%; }
+    .col-md-4 { width: 33.333%; }
+    .col-md-6 { width: 50%; }
+    .col-md-8 { width: 66.666%; }
+    .col-md-9 { width: 75%; }
+    .col-md-12 { width: 100%; }
+}
+
+@media (min-width: 992px) {
+    .col-lg-3 { width: 25%; }
+    .col-lg-4 { width: 33.333%; }
+    .col-lg-6 { width: 50%; }
+    .col-lg-8 { width: 66.666%; }
+    .col-lg-9 { width: 75%; }
+    .col-lg-12 { width: 100%; }
+}
+
+/* Responsive Navigation */
+.navbar {
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.navbar-nav {
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav {
+        flex-direction: row;
+    }
+}
+
+/* Responsive Cards */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: var(--glass-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .glass-card {
+        padding: 1rem;
+    }
+}
+
+/* Responsive Forms */
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive Buttons */
+.btn {
+    padding: 0.5rem 1.5rem;
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .btn {
+        width: auto;
+    }
+}
+
+/* Responsive Images */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+@media (max-width: 576px) {
+    .profile-img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Responsive Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Typography */
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+    h5 { font-size: 1.1rem; }
+    h6 { font-size: 1rem; }
+}
+
+/* Responsive Spacing */
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+
+@media (max-width: 768px) {
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-5 { margin-bottom: 2rem; }
+}
+
+/* Responsive Glass Inputs */
+.glass-input {
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00dbde;
+    box-shadow: var(--hover-glow);
+}
+
+/* Responsive Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Responsive Utility Classes */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+@media (max-width: 768px) {
+    .text-md-center { text-align: center; }
+    .text-md-left { text-align: left; }
+    .text-md-right { text-align: right; }
+}
+
+/* Responsive Flex Utilities */
+.d-flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+
+@media (max-width: 768px) {
+    .flex-md-column { flex-direction: column; }
+    .flex-md-row { flex-direction: row; }
+}
+
+/* Responsive Grid Gaps */
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+.gap-5 { gap: 3rem; }
+
+@media (max-width: 768px) {
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-5 { gap: 2rem; }
+}
+
+/* Responsive Shadows */
+.shadow-sm { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.shadow { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.shadow-lg { box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+
+/* Responsive Borders */
+.rounded { border-radius: 0.25rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 1rem; }
+
+/* Responsive Overflow */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-scroll { overflow: scroll; }
+
+/* Responsive Position */
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+
+/* Responsive Z-index */
+.z-0 { z-index: 0; }
+.z-1 { z-index: 1; }
+.z-2 { z-index: 2; }
+.z-3 { z-index: 3; }
+
+/* Responsive Display */
+.d-none { display: none; }
+.d-block { display: block; }
+.d-inline { display: inline; }
+.d-inline-block { display: inline-block; }
+
+@media (min-width: 576px) {
+    .d-sm-none { display: none; }
+    .d-sm-block { display: block; }
+}
+
+@media (min-width: 768px) {
+    .d-md-none { display: none; }
+    .d-md-block { display: block; }
+}
+
+@media (min-width: 992px) {
+    .d-lg-none { display: none; }
+    .d-lg-block { display: block; }
+}
+
+/* Responsive Visibility */
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+/* Responsive Opacity */
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* Responsive Cursor */
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+/* Responsive Transitions */
+.transition { transition: all 0.3s ease; }
+.transition-fast { transition: all 0.15s ease; }
+.transition-slow { transition: all 0.5s ease; }

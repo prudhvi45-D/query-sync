@@ -1,0 +1,104 @@
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h2 class="text-center mb-4">Login</h2>
+                <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= error_msg %>
+                    </div>
+                <% } %>
+                <form action="/login" method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control glass-input" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control glass-input" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userType" class="form-label">I am a</label>
+                        <select class="form-select glass-input" id="userType" name="userType" required>
+                            <option value="">Select user type</option>
+                            <option value="student">Student</option>
+                            <option value="alumni">Alumni</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary glass-btn">Login</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p class="mb-0">Don't have an account? <a href="/register" class="text-primary">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(26, 26, 46, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(255, 255, 255, 0.1),
+                    0 0 20px rgba(0, 219, 222, 0.1);
+        color: #ffffff;
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .glass-input:focus {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(0, 219, 222, 0.5) !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 219, 222, 0.1) !important;
+        color: #ffffff !important;
+    }
+
+    .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .glass-btn {
+        background: linear-gradient(45deg, #00dbde, #fc00ff) !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .glass-btn:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 15px rgba(0, 219, 222, 0.3) !important;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .text-primary {
+        color: #00dbde !important;
+    }
+
+    .alert {
+        background: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #ffffff;
+        border-radius: 10px;
+    }
+</style>

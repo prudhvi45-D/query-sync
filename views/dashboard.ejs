@@ -1,0 +1,83 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Welcome Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <% if (student) { %>
+                        <h4>Welcome, <%= student.username %>!</h4>
+                        <p class="text-muted">
+                            Student - Year <%= student.yearOfStudy %> | <%= student.department %>
+                        </p>
+                    <% } else if (alumni) { %>
+                        <h4>Welcome, <%= alumni.username %>!</h4>
+                        <p class="text-muted">
+                            Alumni - <%= alumni.currentPosition %> at <%= alumni.company %>
+                        </p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/events/new" class="btn btn-primary">Create Event</a>
+                        <a href="/queries/new" class="btn btn-primary">Ask Question</a>
+                        <a href="/network" class="btn btn-outline-primary">View Network</a>
+                        <a href="/profile" class="btn btn-outline-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Your Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <% if (student) { %>
+                            <li>Questions Asked: <%= student.questionsAsked ? student.questionsAsked.length : 0 %></li>
+                        <% } else if (alumni) { %>
+                            <li>Answers Given: <%= alumni.answersGiven ? alumni.answersGiven.length : 0 %></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Tips</h5>
+                </div>
+                <div class="card-body">
+                    <% if (student) { %>
+                        <p>Make the most of your student experience:</p>
+                        <ul>
+                            <li>Ask questions to get career advice</li>
+                            <li>Update your skills and interests regularly</li>
+                            <li>Connect with alumni in your field</li>
+                        </ul>
+                    <% } else if (alumni) { %>
+                        <p>Help students succeed:</p>
+                        <ul>
+                            <li>Answer questions to guide students</li>
+                            <li>Update your availability regularly</li>
+                            <li>Share your industry experience</li>
+                        </ul>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %> 
